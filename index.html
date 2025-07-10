@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buat Kamu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .halaman {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .aktif {
+      display: flex;
+    }
+
+    /* Amplop */
+    .envelope {
+      width: 200px;
+      height: 150px;
+      background: #f472b6;
+      position: relative;
+      margin: 100px auto 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      cursor: pointer;
+      border: 2px solid #f472b6;
+      transition: 0.5s ease;
+    }
+
+    .flap {
+      width: 0;
+      height: 0;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 75px solid #f472b6;
+      position: absolute;
+      top: -75px;
+      left: 0;
+      z-index: 10;
+      transition: 0.5s ease;
+    }
+
+    .letter {
+      position: absolute;
+      width: 180px;
+      height: 120px;
+      background: #ffe4f2;
+      top: 15px;
+      left: 10px;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+      color: #d63384;
+      border-radius: 8px;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: 0.5s ease;
+    }
+
+    .open .flap {
+      transform: rotateX(180deg);
+    }
+
+    .open .letter {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Bunga */
+    .heart {
+      display: grid;
+      grid-template-columns: repeat(7, 40px);
+      grid-gap: 5px;
+    }
+
+    .flower {
+      font-size: 30px;
+      opacity: 0;
+      transform: scale(0.5) translateY(20px);
+      animation: bounceInFade 0.8s ease forwards;
+    }
+
+    @keyframes bounceInFade {
+      0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+      50% { opacity: 0.7; transform: scale(1.2) translateY(-5px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Teks efek */
+    .typing-container {
+      margin-top: 40px;
+      max-width: 90%;
+      color: #b4005f;
+      font-size: 1.5rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.6;
+      animation: floatText 4s ease-in-out infinite;
+    }
+
+    @keyframes floatText {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.5rem;
+      background: #b4005f;
+      animation: blink 0.7s step-end infinite;
+      vertical-align: bottom;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* Latar belakang */
+    .bunga-bg {
+      background: linear-gradient(135deg, #ffd6ec, #ffe6f7, #fddde6, #fce1ff);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Halaman 1: Amplop -->
+  <div class="halaman aktif" id="halaman1">
+    <h1 class="text-3xl mt-10 text-pink-700 font-semibold">Tekan Amplop 💌</h1>
+    <div class="envelope" onclick="openEnvelope()" id="envelope">
+      <div class="flap"></div>
+      <div class="letter">
+        <p>I Love You Sayang, tekan tombol bawah 😘</p>
+      </div>
+    </div>
+    <button onclick="mulaiBunga()" class="mt-8 px-6 py-3 bg-pink-500 text-white font-semibold rounded-full shadow-lg hover:bg-pink-600 transition">
+      Klik di sini ya sayang 💕
+    </button>
+  </div>
+
+  <!-- Halaman 2: Bunga Cinta -->
+  <div class="halaman bunga-bg" id="halaman2">
+    <div class="heart" id="heart"></div>
+    <div class="typing-container" id="typingText">
+      <span id="typed"></span><span class="cursor"></span>
+    </div>
+  </div>
+
+  <!-- Musik -->
+  <audio id="loveMusic" src="musik.mp3"></audio>
+
+  <script>
+    function openEnvelope() {
+      document.getElementById('envelope').classList.toggle('open');
+    }
+
+    function mulaiBunga() {
+      // Play musik
+      const music = document.getElementById('loveMusic');
+      music.play().catch(() => alert("Aktifkan suara ya sayang 🥺"));
+
+      // Ganti halaman
+      document.getElementById('halaman1').classList.remove('aktif');
+      document.getElementById('halaman2').classList.add('aktif');
+
+      // Jalankan animasi hati & teks
+      tampilkanHati();
+      mulaiMengetik();
+    }
+
+    function tampilkanHati() {
+      const heartPattern = [
+        [0,1,1,0,1,1,0],
+        [1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1],
+        [0,1,1,1,1,1,0],
+        [0,0,1,1,1,0,0],
+        [0,0,0,1,0,0,0]
+      ];
+
+      const heartContainer = document.getElementById('heart');
+      heartContainer.innerHTML = ''; // bersihkan dulu
+      let delay = 0;
+
+      heartPattern.forEach(row => {
+        row.forEach(cell => {
+          const span = document.createElement('span');
+          if (cell === 1) {
+            span.innerText = '💗';
+            span.className = 'flower';
+            span.style.animationDelay = `${delay}s`;
+            delay += 0.2;
+          } else {
+            span.innerHTML = '&nbsp;';
+          }
+          heartContainer.appendChild(span);
+        });
+      });
+    }
+
+    function mulaiMengetik() {
+      const text = "Sayang, makasih ya, udah jadi yang terbaik buat aku, semoga kedepannnya kita bisa sama sama terus☺️💖";
+      const typedEl = document.getElementById("typed");
+      let index = 0;
+
+      function ketik() {
+        if (index < text.length) {
+          typedEl.textContent += text.charAt(index);
+          index++;
+          setTimeout(ketik, 50);
+        }
+      }
+
+      setTimeout(ketik, 2000);
+    }
+  </script>
+
+</body>
+</html>
