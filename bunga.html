@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untuk Kamu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #ffd6ec, #ffe6f7, #fddde6, #fce1ff);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .heart {
+      display: grid;
+      grid-template-columns: repeat(7, 40px);
+      grid-gap: 5px;
+    }
+
+    .flower {
+      font-size: 30px;
+      opacity: 0;
+      transform: scale(0.5) translateY(20px);
+      animation: bounceInFade 0.8s ease forwards;
+    }
+
+    @keyframes bounceInFade {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.2) translateY(-5px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .typing-container {
+      margin-top: 40px;
+      max-width: 90%;
+      color: #b4005f;
+      font-size: 1.5rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.6;
+      animation: floatText 4s ease-in-out infinite;
+    }
+
+    @keyframes floatText {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.5rem;
+      background: #b4005f;
+      animation: blink 0.7s step-end infinite;
+      vertical-align: bottom;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="heart" id="heart"></div>
+
+  <div class="typing-container" id="typingText">
+    <span id="typed"></span><span class="cursor"></span>
+  </div>
+
+  <script>
+    const heartPattern = [
+      [0,1,1,0,1,1,0],
+      [1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,1],
+      [0,1,1,1,1,1,0],
+      [0,0,1,1,1,0,0],
+      [0,0,0,1,0,0,0]
+    ];
+
+    const heartContainer = document.getElementById('heart');
+    let delay = 0;
+
+    heartPattern.forEach(row => {
+      row.forEach(cell => {
+        const span = document.createElement('span');
+        if (cell === 1) {
+          span.innerText = '💗';
+          span.className = 'flower';
+          span.style.animationDelay = `${delay}s`;
+          delay += 0.2;
+        } else {
+          span.innerHTML = '&nbsp;';
+        }
+        heartContainer.appendChild(span);
+      });
+    });
+
+    const text = "Sayang, makasih ya, udah jadi yang terbaik buat aku, semoga kedepannnya kita bisa sama sama terus☺️💖";
+    const typedEl = document.getElementById("typed");
+    let index = 0;
+
+    function typeChar() {
+      if (index < text.length) {
+        typedEl.textContent += text.charAt(index);
+        index++;
+        setTimeout(typeChar, 50);
+      }
+    }
+
+    setTimeout(typeChar, 2000);
+  </script>
+
+</body>
+</html>
